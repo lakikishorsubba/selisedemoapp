@@ -27,7 +27,7 @@ spec: # Desired state specification
       containers: # Containers in each Pod
         - name: taskmanager # Container name
           # Docker image from your CI/CD pipeline (update with your DockerHub username)
-          image: lakikishorsubba/task-manager:82bf8ce79a49c9945d052dc8e8154dba9ea20cb4
+          image: lakikishorsubba/task-manager:2f40bd03556f12db784790c4e4131fff23b6781f
           ports: # Ports exposed by container
             - containerPort: 8000 # Port the Flask app listens on
               name: http # Named port for Service reference
@@ -38,4 +38,3 @@ spec: # Desired state specification
               value: "kubernetes-secret-key-02220155" # 📝 Replace STUDENT_NUMBER
             - name: FLASK_ENV
               value: "production"
-
