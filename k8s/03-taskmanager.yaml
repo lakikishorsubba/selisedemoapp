@@ -7,7 +7,7 @@ apiVersion: apps/v1 # API version for Deployment resources
 kind: Deployment # Resource type - manages application replicas
 metadata: # Information about this Deployment
   name: taskmanager-deployment
-  namespace: 02220155 # 📝 Replace STUDENT_NUMBER with your number
+  namespace: "02220155" # 📝 Replace STUDENT_NUMBER with your number
   labels: # Labels for organizing resources
     app: taskmanager
     component: frontend
