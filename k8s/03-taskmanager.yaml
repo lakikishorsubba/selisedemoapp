@@ -44,7 +44,7 @@ apiVersion: v1 # API version for Service resources
 kind: Service # Resource type - network abstraction
 metadata: # Service information
   name: taskmanager-service
-  namespace: 02220155 # 📝 Replace STUDENT_NUMBER with your number
+  namespace: "02220155" # 📝 Replace STUDENT_NUMBER with your number
   labels:
     app: taskmanager
     student: "02220155" # 📝 Replace with your student number
