@@ -102,10 +102,3 @@ jobs:
           
           # Verify deployment
           kubectl get pods -l app=taskmanager
-
-      - name: Deployment Summary
-        run: |
-          echo "🎉 Deployment completed successfully!"
-          echo "📦 Image: ${{ needs.build-and-push.outputs.image-tag }}"
-          echo "🏷️ Git SHA: ${{ github.sha }}"
-          echo "🔧 Check status: kubectl get all"
