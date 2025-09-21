@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+env:
+  K8S_NAMESPACE: "02220155"
+  DEPLOYMENT_NAME: "taskmanager-deployment"
+
 jobs:
   build-and-push:
     name: Build and Push Docker Image
@@ -81,28 +85,33 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add k8s/03-taskmanager.yaml
+
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git commit -m "Update image to ${{ needs.build-and-push.outputs.image-tag }}"
             
-            # ✅ Make sure branch is up-to-date before pushing
-            git pull origin main --rebase
-            
-            git push origin main
-            echo "✅ Updated Kubernetes manifest committed and pushed"
+            # Pull latest main safely before pushing
+            if git pull origin main --rebase; then
+              git push origin main
+              echo "✅ Updated Kubernetes manifest committed and pushed"
+            else
+              echo "⚠️ Merge conflict or rebase issue detected. Skipping push, continuing deployment."
+              git rebase --abort || true
+            fi
           fi
 
       - name: Deploy to Kubernetes
         run: |
-          # Deploy the application using the manifests
           echo "Deploying application to Kubernetes..."
+
+          # Apply all manifests in the correct namespace
+          kubectl apply -f k8s/ --namespace=$K8S_NAMESPACE
           
-          # Apply all Kubernetes manifests
-          kubectl apply -f k8s/
+          # Wait for rollout in the correct namespace
+          kubectl rollout status deployment/$DEPLOYMENT_NAME \
+            --timeout=300s \
+            --namespace=$K8S_NAMESPACE
           
-          # Wait for rollout to complete
-          kubectl rollout status deployment/taskmanager-deployment --timeout=300s
-          
-          # Verify deployment
-          kubectl get pods -l app=taskmanager
+          # Verify pods in that namespace
+          kubectl get pods -l app=taskmanager --namespace=$K8S_NAMESPACE
