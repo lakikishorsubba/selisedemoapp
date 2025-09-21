@@ -85,7 +85,11 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update image to ${{ needs.build-and-push.outputs.image-tag }}"
-            git push
+            
+            # ✅ Make sure branch is up-to-date before pushing
+            git pull origin main --rebase
+            
+            git push origin main
             echo "✅ Updated Kubernetes manifest committed and pushed"
           fi
 
